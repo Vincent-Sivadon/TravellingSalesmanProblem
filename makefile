@@ -8,21 +8,13 @@ HDR_DIR=./include/
 LIB_DIR=./lib/
 BIN_DIR=./bin/
 
-TSP: $(SRC_FILES) $(HDR_FILES)
-	$(CC) -I$(HDR_DIR) -fPIC -shared $(SRC_FILES) -o $(LIB_DIR)libTSP.so -ldl
-
-Initialization: tests/Initialization.c
-	$(CC) -I$(HDR_DIR) -L$(LIB_DIR) -Wl,-rpath=$(LIB_DIR) $< -o $(BIN_DIR)$@ -lTSP
-
-runTests: bin/*
-	./bin/
-	
-
+TSP: main.c $(SRC_FILES) $(HDR_FILES)
+	$(CC) -g -I$(HDR_DIR) $< $(SRC_FILES) -o $@	
 
 # ====================== #
 
 clean:
-	rm -rf bin/* lib/*
+	rm -rf TSP
 
 .PHONY:
 	clean
