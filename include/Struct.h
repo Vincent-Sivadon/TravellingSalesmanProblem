@@ -12,7 +12,7 @@ Arc * newArc(int i, int j);
 
 /* Add an Arc to a queue of arcs */
 void addToQueue(Arc ** queue, int i, int j);
-
+void insertArc(Arc ** queue, Arc * arc);
 
 /* ============================================================================= */
 
@@ -21,13 +21,9 @@ void addToQueue(Arc ** queue, int i, int j);
 struct Problem {
     int * adj;              // Adjacency Matrix
     int N;                  // Square root of the 1D size of adj (max node index)
-
-    Arc * queue;            // Queue of selected arcs
-    Arc arc_of_max_regret;  // Arc that has the highest regret
     int bound;              // Evaluation of this problem
-
-    struct Problem * sub1;  // Pointer to a first subproblem
-    struct Problem * sub2;  // Pointer to a second subproblem
+    Arc * queue;            // Queue of selected arcs
+    int queue_size;
 
 }; typedef struct Problem Problem;
 

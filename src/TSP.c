@@ -1,7 +1,9 @@
 #include "TSP.h"
-#include "Struct.h"
+#include "Utility.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "limits.h"
 
 /* For every line of the adjacency matrix,
@@ -25,6 +27,9 @@ int minCostForLeaving(int * adj, int N)
             if (adj[i*N + j] < min && adj[i*N + j] != -1)
                 min = adj[i*N + j];
 
+        // Skip masked ligns
+        if (min == INT_MAX) continue;
+        
         // Accumulate those minimums
         sum_of_all_mins += min;
 
@@ -59,6 +64,9 @@ int minCostForEntering(int * adj, int N)
             if (adj[i*N + j] < min && adj[i*N + j] != -1)
                 min = adj[i*N + j];
 
+        // Skip masked Columns
+        if (min == INT_MAX) continue;
+        
         // Accumulate those minimums
         sum_of_all_mins += min;
 
@@ -82,18 +90,91 @@ void bound(Problem * p)
     p->bound = bound;
 }
 
+/* Given (k,l) representing an arc of adj, returns it's regret */
+int getRegret(int * adj, int N, int k, int l)
+{
+    int minLign = INT_MAX;
+    int minCol  = INT_MAX;
+    
+    // Run through the column
+    for (int i=0 ; i<N ; i++)
+        if (i!= k && adj[i*N + l] != -1 && adj[i*N + l] < minCol)
+            minCol = adj[i*N + l];
+    
+    // Run through all the ligns
+    for (int j=0 ; j<N ; j++)
+        if (j!= l && adj[k*N + j] != -1 && adj[k*N + j] < minLign)
+            minLign = adj[k*N + j];
+
+    return minCol + minLign;
+}
+
+/* Returns the arc of max regret given a graph of size N represented by adj */
+Arc * getArcOfMaxRegret(int * adj, int N)
+{
+    // Init
+    Arc * arc_of_max_regret = newArc(-1, -1);
+
+    int min_regret = INT_MAX;
+
+    for (int i=0 ; i<N ; i++)
+        for (int j=0 ; j<N ; j++)
+            if (adj[i*N + j] == 0 && adj[i*N + j] != -1)
+                if (getRegret(adj, N, i, j) < min_regret) 
+                {
+                    arc_of_max_regret->i = i;
+                    arc_of_max_regret->j = j;
+                }
+
+    return arc_of_max_regret;
+}
+
+void maskLignCol(int * adj, int N, int l, int c)
+{
+    for (int i=0 ; i<N ; i++)
+        adj[i*N + c] = -1;
+    for (int j=0 ; j<N ; j++)
+        adj[l*N + j] = -1;
+}
 
 /* @param initialAdj : the adjacency matrix of the first problem
  * @param N : the number of nodes */
-void TSP(int * initial_adj, int N)
+void TSP(Problem * p)
 {
-    // Defines the initial problem
-    Problem * p = newProblem();
-    p->adj = initial_adj;
-    p->N = N;
-    
-    // Bound
-    bound(p);
+    if (p->queue_size >= p->N)
+    {
+        displayArcQueue(p->queue);
+        return;
+    }   
 
-    // Branch
+    // Get arc of max regret
+    Arc * arc_of_max_regret = getArcOfMaxRegret(p->adj, p->N);
+    printf("%d %d\n", arc_of_max_regret->i, arc_of_max_regret->j);
+
+    // Create sub problem 2
+    Problem * sub2 = newProblem();
+    sub2->adj = (int *) malloc(p->N*p->N * sizeof(int));
+    memcpy(sub2->adj, p->adj, p->N*p->N);
+    sub2->N = p->N;
+    sub2->adj[arc_of_max_regret->i * sub2->N + arc_of_max_regret->j] = -1;
+    sub2->queue = p->queue;
+    sub2->queue_size = p->queue_size;
+    sub2->bound = p->bound + getRegret(p->adj, p->N, arc_of_max_regret->i, arc_of_max_regret->j);
+
+    // Create sub problem 1
+    Problem * sub1 = newProblem();
+    sub1->adj = p->adj;
+    sub1->N = p->N;
+    maskLignCol(sub1->adj, sub1->N, arc_of_max_regret->i, arc_of_max_regret->j);
+    sub1->queue = p->queue;
+    sub1->queue_size++;
+    addToQueue(&sub1->queue, arc_of_max_regret->i, arc_of_max_regret->j); 
+    bound(sub1);
+
+    if (sub1->bound <= sub2->bound)
+        TSP(sub1);
+    else
+    {
+        TSP(sub2);
+    }
 }
