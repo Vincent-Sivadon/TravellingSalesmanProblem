@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Graph.h"
+#include "Struct.h"
 
 #include <stdio.h>
 
@@ -16,11 +16,11 @@ void displayMatrixTerminal(int *mat, int N)
     }
 }
 
-void displayArcQueue(Arc * arc_queue_head)
+void displayArcQueue(Arc * queue)
 {
-    while (arc_queue_head != NULL)
+    while (queue != NULL)
     {
-        printf("%d - %d\n", arc_queue_head->i, arc_queue_head->j);
-        arc_queue_head = arc_queue_head->next;
+        printf("%d - %d\n", queue->i, queue->j);
+        queue = queue->next;
     }
 }

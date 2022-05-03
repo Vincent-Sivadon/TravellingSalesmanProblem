@@ -1,119 +1,99 @@
-/* */
-
 #include "TSP.h"
+#include "Struct.h"
 
-#include <stdlib.h>
+#include <stdio.h>
 #include "limits.h"
 
-/* Branch and Bound Node */
-typedef struct {
-    Arc * arcMaxRegret;
-    int eval;
-} Node;
-
-/* */
-int evaluate(int * mat, int N)
+/* For every line of the adjacency matrix,
+ * We consider the min cost for leaving the node corresponding to that line
+ * and subtract that amount to all elements of this lign
+ * Returns the sum of all the minimum exit cost */
+int minCostForLeaving(int * adj, int N)
 {
-    // Final evaluation
-    int eval = 0;
+    // Sum of all lign minimums (for problem bounds)
+    int sum_of_all_mins = 0;
 
-    // Will store the minimum of each line
-    int lignMinimums[N];
-
-    // For all lign i, store the minimum and add it to eval
+    // Run through every lines
     for (int i=0 ; i<N ; i++)
     {
-        lignMinimums[i] = minLign(mat, N, i);
-        eval += lignMinimums[i];
+        // Store the minimum value of that lign
+        int min = INT_MAX;
+        
+        // Run through every element of that lign
+        // Searching for the minimum value
+        for (int j=0 ; j<N ; j++)
+            if (adj[i*N + j] < min && adj[i*N + j] != -1)
+                min = adj[i*N + j];
+
+        // Accumulate those minimums
+        sum_of_all_mins += min;
+
+        // Run a second time through every element of that lign
+        // Subtracting min to these elements
+        for (int j=0 ; j<N ; j++)
+            if (adj[i*N + j] != -1)
+                adj[i*N + j] -= min;
     }
-    
-    // For all col j, add the min - lignMinimums[j]
+
+    return sum_of_all_mins;
+}
+
+/* For every column of the adjacency matrix,
+ * We consider the min cost for entering the node corresponding to that column
+ * and subtract that amount to all elements of this column
+ * Returns the sum of all the minimum entering cost */
+int minCostForEntering(int * adj, int N)
+{
+    // Sum of all lign minimums (for problem bounds)
+    int sum_of_all_mins = 0;
+
+    // Run through every column
     for (int j=0 ; j<N ; j++)
     {
-        // Minimum arc value of that col
+        // Store the minimum value of that column
         int min = INT_MAX;
-
-        // Search for the minimum value of the column
-        for (int i=0 ; i<N; i++)
-            if (mat[i*N + j] - lignMinimums[i] < min && mat[i*N + j] != -1)
-                min = mat[i*N + j] - lignMinimums[i];
         
-        eval += min;
+        // Run through every element of that column
+        // Searching for the minimum value
+        for (int i=0 ; i<N ; i++)
+            if (adj[i*N + j] < min && adj[i*N + j] != -1)
+                min = adj[i*N + j];
+
+        // Accumulate those minimums
+        sum_of_all_mins += min;
+
+        // Run a second time through every element of that column
+        // Subtracting min to these elements
+        for (int i=0 ; i<N ; i++)
+            if (adj[i*N + j] != -1)
+                adj[i*N + j] -= min;
     }
 
-    return eval;
+    return sum_of_all_mins;
 }
 
-/* Get regret for the Arc {i,j} */
-int arcRegret(int * mat, int N, int i, int j)
+/* Evaluate the inferior bound of a given problem */
+void bound(Problem * p)
 {
-    int minL = minLign(mat, N, i);
-    int minC = minCol(mat, N, j);
+    int bound = 0;
+    bound += minCostForLeaving(p->adj, p->N);
+    bound += minCostForEntering(p->adj, p->N);
 
-    return minL + minC;
+    p->bound = bound;
 }
 
-/* Retrieve the Arc of max regret 
- * in matrix mat of size N */
-Arc arcMaxRegret(int * mat, int N)
+
+/* @param initialAdj : the adjacency matrix of the first problem
+ * @param N : the number of nodes */
+void TSP(int * initial_adj, int N)
 {
-    Arc arcOfMaxRegret;
-    int maxRegret = INT_MAX;
+    // Defines the initial problem
+    Problem * p = newProblem();
+    p->adj = initial_adj;
+    p->N = N;
+    
+    // Bound
+    bound(p);
 
-    // Regrets computation
-    for (int i=0 ; i<N ; i++)
-        for (int j=0 ; j<N ; j++)
-            if (mat[i*N + j] == 0)
-            {
-                int regret = arcRegret(mat, N, i, j);
-
-                if (regret > maxRegret)
-                {
-                    maxRegret = regret;
-                    arcOfMaxRegret.i = i;
-                    arcOfMaxRegret.j = j;
-                    arcOfMaxRegret.regret = regret;
-                }
-            }
-
-    return arcOfMaxRegret;
-}
-
-/* */
-Arc * TSP(int * mat, int N)
-{
-    // Store Current, sub-problem 1 and 2
-    Node currNode, sp1, sp2;
-
-    Arc * arcQueueHead = NULL;
-    arcQueueHead = (Arc *) malloc(sizeof(Arc));
-    arcQueueHead->id = 0;
-    currNode.eval = evaluate(mat, N);
-    *currNode.arcMaxRegret = arcMaxRegret(mat, N);
-
-    while (arcQueueHead->id < N-1)
-    {
-        sp2.eval = currNode.eval + currNode.arcMaxRegret->regret;
-        sp1.eval = evaluate(mat, N);
-        if (sp1.eval <= sp2.eval)
-        {
-            // Insert arc0 to queue
-            currNode.arcMaxRegret->next = arcQueueHead;
-            currNode.arcMaxRegret->id = arcQueueHead->id + 1;
-            arcQueueHead = currNode.arcMaxRegret;
-
-            // Update next current node
-            currNode = sp1;
-            reduce(mat, N, currNode.arcMaxRegret);
-            *currNode.arcMaxRegret = arcMaxRegret(mat, N);
-        }
-        else
-        {
-            currNode = sp2;
-            // treat matrix : mask the arc ?
-            *currNode.arcMaxRegret = arcMaxRegret(mat, N);
-        }
-    }
-
-    return arcQueueHead;
+    // Branch
 }

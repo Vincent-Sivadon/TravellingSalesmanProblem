@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Graph.h"
-
-/* */
-Arc * TSP(int * mat, int N);
+/* @param initialAdj : the adjacency matrix of the first problem
+ * @param N : the number of nodes */
+void TSP(int * initial_adj, int N);

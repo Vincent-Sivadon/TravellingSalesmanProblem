@@ -1,11 +1,18 @@
+#include "Initialization.h"
+#include "Utility.h"
 #include "TSP.h"
 
-#include "Utility.h"
+#include <stdlib.h>
 
 int main(int argc, char const *argv[])
 {
-    int * mat = fileInitialization("edges.txt");
-    TSP(mat, 4);
-    //displayMatrixTerminal(mat, 4);
+    int * adj;
+    int N;
+    fileInitialization("edges.txt", &adj, &N);
+
+    //TSP(adj, N);
+    //displayMatrixTerminal(adj, N);
+
+
     return 0;
 }
