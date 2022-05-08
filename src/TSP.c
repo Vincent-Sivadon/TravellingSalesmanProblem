@@ -80,7 +80,8 @@ int minCostForEntering(int * adj, int N)
     return sum_of_all_mins;
 }
 
-/* Evaluate the inferior bound of a given problem */
+/* Evaluate the inferior bound of a given problem
+ * Will modify the adjacency matrix */
 void bound(Problem * p)
 {
     int bound = 0;
@@ -115,16 +116,20 @@ Arc * getArcOfMaxRegret(int * adj, int N)
     // Init
     Arc * arc_of_max_regret = newArc(-1, -1);
 
-    int min_regret = INT_MAX;
+    int max_regret = -1;
 
     for (int i=0 ; i<N ; i++)
         for (int j=0 ; j<N ; j++)
             if (adj[i*N + j] == 0 && adj[i*N + j] != -1)
-                if (getRegret(adj, N, i, j) < min_regret) 
+            {
+                int regret = getRegret(adj, N, i, j);
+                if (regret > max_regret) 
                 {
                     arc_of_max_regret->i = i;
                     arc_of_max_regret->j = j;
+                    max_regret = regret;
                 }
+            }
 
     return arc_of_max_regret;
 }
