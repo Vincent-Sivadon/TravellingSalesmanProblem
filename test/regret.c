@@ -1,6 +1,4 @@
 #include "TSP.h"
-#include "Utility.h"
-#include "Initialization.h"
 
 #include <stdlib.h>
 #include <assert.h>
