@@ -171,14 +171,14 @@ void TSP(Problem * p)
     sub1->N = p->N;
     maskLignCol(sub1->adj, sub1->N, arc_of_max_regret->i, arc_of_max_regret->j);
     sub1->queue = p->queue;
+    addToQueue(&sub1->queue, arc_of_max_regret->i, arc_of_max_regret->j);
     sub1->queue_size = p->queue_size + 1;
-    addToQueue(&sub1->queue, arc_of_max_regret->i, arc_of_max_regret->j); 
     bound(sub1);
 
     if (sub1->bound <= sub2->bound)
         TSP(sub1);
-    //else
-    //{
-    //    TSP(sub2);
-    //}
+    else
+    {
+        TSP(sub2);
+    }
 }

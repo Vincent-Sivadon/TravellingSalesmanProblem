@@ -7,7 +7,7 @@ void getRegretTest()
 {
     int * adj;
     int N;
-    fileInitialization("../edges.txt", &adj, &N);
+    fileInitialization("../../edges.txt", &adj, &N);
 
     Problem * p = newProblem();
     p->adj = adj;
@@ -22,7 +22,7 @@ void getArcOfMaxRegretTest()
 {
     int * adj;
     int N;
-    fileInitialization("../edges.txt", &adj, &N);
+    fileInitialization("../../edges.txt", &adj, &N);
 
     Problem * p = newProblem();
     p->adj = adj;
@@ -37,10 +37,8 @@ void getArcOfMaxRegretTest()
 int main(int argc, char const *argv[])
 {
     getRegretTest();
-    printf("getRegret test passed\n");
 
     getArcOfMaxRegretTest();
-    printf("getArcOfMaxRegret test passed\n");
 
     return 0;
 }

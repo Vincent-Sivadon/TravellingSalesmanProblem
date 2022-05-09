@@ -8,7 +8,7 @@ void CoreTest()
 {
     int * adj;
     int N;
-    fileInitialization("../edges.txt", &adj, &N);
+    fileInitialization("../../edges.txt", &adj, &N);
 
     Problem * p = newProblem();
     p->adj = adj;
@@ -44,7 +44,6 @@ void CoreTest()
 int main(int argc, char const *argv[])
 {
     CoreTest();
-    printf("Core test passed\n");
 
     return 0;
 }

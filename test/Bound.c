@@ -7,7 +7,7 @@ void boundTest()
 {
     int * adj;
     int N;
-    fileInitialization("../edges.txt", &adj, &N);
+    fileInitialization("../../edges.txt", &adj, &N);
 
     Problem * p = newProblem();
     p->adj = adj;
@@ -26,7 +26,6 @@ void boundTest()
 int main(int argc, char const *argv[])
 {
     boundTest();
-    printf("bound test passed\n");
 
     return 0;
 }

@@ -7,7 +7,7 @@ void maskTest()
 {
     int * adj;
     int N;
-    fileInitialization("../edges.txt", &adj, &N);
+    fileInitialization("../../edges.txt", &adj, &N);
     maskLignCol(adj, N, 2, 1);
 
     assert(adj[2*N + 0] == -1);
@@ -23,7 +23,6 @@ void maskTest()
 int main(int argc, char const *argv[])
 {
     maskTest();
-    printf("mask test passed\n");
 
     return 0;
 }

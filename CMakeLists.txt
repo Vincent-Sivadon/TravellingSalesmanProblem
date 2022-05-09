@@ -17,12 +17,6 @@ add_executable(prog prog.c)
 target_link_libraries(prog PUBLIC TSP)
 target_compile_options(prog PUBLIC -g)
 
-# Tests
-add_subdirectory(test)
 
-add_custom_target(test COMMAND echo "---------------------"
-                       COMMAND regret
-                       COMMAND bound
-                       COMMAND mask
-                       COMMAND echo "---------------------"
-                       )
+enable_testing()
+add_subdirectory(test)

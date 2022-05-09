@@ -11,8 +11,7 @@ struct Arc {
 Arc * newArc(int i, int j);
 
 /* Add an Arc to a queue of arcs */
-void addToQueue(Arc ** queue, int i, int j);
-void insertArc(Arc ** queue, Arc * arc);
+int addToQueue(Arc ** queue, int i, int j);
 
 /* ============================================================================= */
 
