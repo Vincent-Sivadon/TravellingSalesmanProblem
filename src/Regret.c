@@ -1,4 +1,5 @@
 #include "Regret.h"
+#include "Utility.h"
 
 #include <limits.h>
 

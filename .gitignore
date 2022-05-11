@@ -1,4 +1,3 @@
 .vscode/
-bin/
 TSP
-build/
+src/*.o
