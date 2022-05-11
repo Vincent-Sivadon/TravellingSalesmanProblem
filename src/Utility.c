@@ -35,18 +35,23 @@ void printNodeQueue(Arc * queue)
     {
         printf("%d ", i);
 
-        if (i==0) loop_count++;
+        if (i==0)
+            loop_count++;
 
         current = queue;
+        int t=-1;
         while (current != NULL)
         {
             if (current->i == i)
             {
                 i = current->j;
+                t = 0;
                 break;
             }
             current = current->next;
         }
+        if (t == -1)
+            loop_count++;
 
     }
 

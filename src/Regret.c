@@ -50,6 +50,9 @@ Arc * getArcOfMaxRegret(Problem * p)
                 }
             }
 
+    if (arc_of_max_regret->i == -1)
+        return NULL;
+
     // If this arc implies a cycle
     // Out this arc in adj and pick a new one
     if (!checkCycles(p->queue, arc_of_max_regret->i, arc_of_max_regret->j))
@@ -57,7 +60,6 @@ Arc * getArcOfMaxRegret(Problem * p)
         p->adj[arc_of_max_regret->i*p->N + arc_of_max_regret->j] = -1;
         arc_of_max_regret = getArcOfMaxRegret(p);
     }
-    
 
     return arc_of_max_regret;
 }
@@ -66,19 +68,23 @@ Arc * getArcOfMaxRegret(Problem * p)
  * we must adapt the procedure a bit
  * mainly we can't bound sub1 or we'll
  * loose the last regret information */
-void addLastArcs(Problem * p)
+int addLastArcs(Problem * p)
 {
     //
     int N = p->N;
     int regret = 0;
 
     Arc * arc = getArcOfMaxRegret(p);
+    if (arc == NULL)
+        return 1;
+
     maskLignCol(p->adj, p->N, arc->i, arc->j);
     addToQueue(&p->queue, arc->i, arc->j);
     regret += getRegret(p->adj, p->N, arc->i, arc->j);
     
     // Search for the last arc in adj
     // (getArcOfMaxRegret won't' work here)
+    arc->i = -1;
     for (int i = 0; i < N; i++)
         for (int j = 0; j < N; j++)
             if (p->adj[i*N+ j] != -1)
@@ -87,7 +93,15 @@ void addLastArcs(Problem * p)
                 arc->j = j;
                 regret += p->adj[i*N+j];
             }    
+
+    // Means no possible way
+    if (arc->i == -1)
+        return 1;
+
     addToQueue(&p->queue, arc->i, arc->j);
 
     p->bound += regret;
+
+    // Means everything went fine
+    return 0;
 }

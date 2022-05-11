@@ -12,4 +12,4 @@ Arc * getArcOfMaxRegret(Problem * p);
  * we must adapt the procedure a bit
  * mainly we can't bound sub1 or we'll
  * loose the last regret information */
-void addLastArcs(Problem * p);
+int addLastArcs(Problem * p);

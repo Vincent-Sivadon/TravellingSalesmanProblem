@@ -17,6 +17,7 @@ Arc * newArc(int i, int j);
 
 /* Add an Arc to a queue of arcs */
 void addToQueue(Arc ** queue, int i, int j);
+
 /* Check if the insertion of the Arc (i,j) in queue will imply a cycle 
  * Returns 0 if it does, 1 if not */
 int checkCycles(Arc *queue, int i, int j);
@@ -38,5 +39,8 @@ struct Problem {
 
 /* Create new problem */
 Problem * newProblem();
+
+void freeQueue(Arc * queue);
+void freeProblem(Problem *p);
 
 /* ============================================================================= */

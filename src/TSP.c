@@ -10,6 +10,7 @@
 #include <limits.h>
 
 static int current_min = INT_MAX;
+static Arc * best_queue;
 
 /* Create Sub problem 1
  * @param arc : Arc of Max Regret of p */
@@ -69,39 +70,42 @@ Problem * createSub2(Problem * p, Arc * arc)
 
 /* @param initialAdj : the adjacency matrix of the first problem
  * @param N : the number of nodes */
-Arc * TSPrecursiv(Problem * p)
+void TSPrecursiv(Problem * p)
 {
-    // Will store eventually the best queue
-    Arc * queue;
-
     // If p is a leaf
     if (p->queue_size >= p->N-2)
     {
         // Add last arc
-        addLastArcs(p);
+        if (addLastArcs(p) == 1)
+            return;
 
         // If evaluation inferior than the current_min
         // Than it is the best one currently, and we print it
         if (p->bound < current_min)
         {
             current_min = p->bound;
-            queue = copyQueue(p->queue);
+            freeQueue(best_queue);
+            best_queue = copyQueue(p->queue);
         }
 
-        return queue;
+        return;
     }
 
     Arc * arc_of_max_regret = getArcOfMaxRegret(p);
+    if (arc_of_max_regret == NULL)
+        return;
 
     Problem *sub1 = createSub1(p, arc_of_max_regret);
     Problem *sub2 = createSub2(p, arc_of_max_regret);
 
     if (sub1->bound < current_min)
-        queue = TSPrecursiv(sub1);
+        TSPrecursiv(sub1);
     if (sub2->bound < current_min)
-        queue = TSPrecursiv(sub2);
+        TSPrecursiv(sub2);
 
-    return queue;
+    freeProblem(sub1);
+    freeProblem(sub2);
+    free(arc_of_max_regret);
 }
 
 /* TSPrecursive init and call wrapper */
@@ -118,7 +122,9 @@ Arc * TSP(const char *filename)
     p->queue_size = 0;
     bound(p);
 
-    Arc * queue = TSPrecursiv(p);
+    TSPrecursiv(p);
 
-    return queue;
+    freeProblem(p);
+
+    return best_queue;
 }

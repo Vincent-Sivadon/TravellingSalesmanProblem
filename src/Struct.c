@@ -59,3 +59,21 @@ Problem * newProblem()
 
     return p;
 }
+
+
+void freeQueue(Arc *queue)
+{
+    while (queue != NULL)
+    {
+        Arc * tmp = queue;
+        queue = queue->next;
+        free(tmp);
+    }
+}
+
+void freeProblem(Problem *p)
+{
+    freeQueue(p->queue);
+    free(p->adj);
+    free(p);
+}
