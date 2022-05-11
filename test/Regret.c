@@ -28,7 +28,7 @@ void getArcOfMaxRegretTest()
     p->adj = adj;
     p->N = N;
     bound(p);
-    Arc * arc_of_max_regret = getArcOfMaxRegret(adj, N);
+    Arc * arc_of_max_regret = getArcOfMaxRegret(p);
 
     assert(arc_of_max_regret->i == 2);
     assert(arc_of_max_regret->j == 1);

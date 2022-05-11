@@ -1,4 +1,9 @@
+/* Travelling Salesman Data Structures */
+
 #pragma once
+
+/* ============================================================================= */
+
 
 /* Represent an arc between two nodes i and j in a graph
  * Points towards next so we can build chained arc lists */
@@ -11,7 +16,11 @@ struct Arc {
 Arc * newArc(int i, int j);
 
 /* Add an Arc to a queue of arcs */
-int addToQueue(Arc ** queue, int i, int j);
+void addToQueue(Arc ** queue, int i, int j);
+/* Check if the insertion of the Arc (i,j) in queue will imply a cycle 
+ * Returns 0 if it does, 1 if not */
+int checkCycles(Arc *queue, int i, int j);
+
 
 /* ============================================================================= */
 
@@ -29,3 +38,5 @@ struct Problem {
 
 /* Create new problem */
 Problem * newProblem();
+
+/* ============================================================================= */
