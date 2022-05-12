@@ -1,4 +1,7 @@
-/* Contains adjacency matrix data structure related features */
+/* 2022 Vincent Sivadon <vincent.sivadon@ens.uvsq.fr>
+ *
+ * Contains adjacency matrix data structure related features
+*/
 
 #pragma once
 

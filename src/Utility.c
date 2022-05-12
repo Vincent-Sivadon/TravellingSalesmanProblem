@@ -1,3 +1,5 @@
+/* 2022 Vincent Sivadon <vincent.sivadon@ens.uvsq.fr> */
+
 #include "Utility.h"
 
 /* Print Matrix mat of order N in terminal*/

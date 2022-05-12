@@ -1,3 +1,5 @@
+/* 2022 Vincent Sivadon <vincent.sivadon@ens.uvsq.fr> */
+
 #include "Bound.h"
 
 #include <limits.h>

@@ -1,3 +1,5 @@
+/* 2022 Vincent Sivadon <vincent.sivadon@ens.uvsq.fr> */
+
 #include "TSP.h"
 #include "Regret.h"
 #include "Bound.h"
@@ -11,6 +13,7 @@
 
 static int current_min = INT_MAX;
 static Arc * best_queue;
+static int best_eval;
 
 /* Create Sub problem 1
  * @param arc : Arc of Max Regret of p */

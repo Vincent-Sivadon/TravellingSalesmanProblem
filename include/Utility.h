@@ -1,4 +1,4 @@
-/* Contains developpement utility functions */
+/* 2022 Vincent Sivadon <vincent.sivadon@ens.uvsq.fr> */
 
 #pragma once
 
